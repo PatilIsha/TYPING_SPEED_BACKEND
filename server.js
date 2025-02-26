@@ -18,9 +18,17 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+
+// Import Routes
+const scoreRoutes = require("./routes/scoreRoutes");
+app.use("/scores", scoreRoutes);  // Use score routes
+
+// Default Route for root (fixing "Cannot GET /")
+app.get("/", (req, res) => {
+  res.send("Typing Speed Backend API is Running!");
 });
 
 // Store connected players
